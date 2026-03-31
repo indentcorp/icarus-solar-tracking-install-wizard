@@ -23,7 +23,6 @@ if ! command -v brew &>/dev/null; then
   [[ -f /usr/local/bin/brew ]] && eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-# 3. Node.js (npm/npx 포함)
 if ! command -v node &>/dev/null; then
   echo "📦 Node.js 설치 중..."
   brew install node

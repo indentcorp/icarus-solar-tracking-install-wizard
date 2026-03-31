@@ -10,11 +10,10 @@ Write-Host "🚀 Icarus Solar Tracking 설치를 시작합니다..." -Foreground
 $policy = Get-ExecutionPolicy -Scope CurrentUser
 if ($policy -eq "Restricted" -or $policy -eq "Undefined") {
   try {
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+    Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -Force
     Write-Host "✓ ExecutionPolicy 설정 완료" -ForegroundColor Green
   } catch {
-    Write-Host "ExecutionPolicy 설정 실패 (Group Policy에 의해 차단됨):" -ForegroundColor Red
-    Write-Host "  Set-ExecutionPolicy -Scope CurrentUser RemoteSigned" -ForegroundColor Yellow
+    Write-Host "ExecutionPolicy 설정 실패 (Group Policy 제한). 관리자에게 문의하세요." -ForegroundColor Red
     exit 1
   }
 }
@@ -64,10 +63,11 @@ if (-not (Get-Command bun -ErrorAction SilentlyContinue)) {
   Write-Host "📦 Bun 설치 중..."
   irm bun.sh/install.ps1 | iex
   Refresh-Path
-  $bunBin = Join-Path $env:USERPROFILE ".bun\bin"
-  if ($env:PATH -notlike "*$bunBin*") {
-    $env:PATH = "$bunBin;$env:PATH"
-  }
+}
+
+$bunBin = Join-Path $env:USERPROFILE ".bun\bin"
+if ($env:PATH -notlike "*$bunBin*") {
+  $env:PATH = "$bunBin;$env:PATH"
 }
 
 # 6. Clone (idempotent)
