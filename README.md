@@ -12,6 +12,12 @@ curl -fsSL https://raw.githubusercontent.com/indentcorp/icarus-solar-tracking-in
 irm https://raw.githubusercontent.com/indentcorp/icarus-solar-tracking-install-wizard/main/bootstrap.ps1 | iex
 ```
 
+### 사전 준비
+
+- **GitHub 계정**: 관리자에게 저장소 접근 권한 요청 필요
+- **Google 계정**: Google Sheets 접근용 (관리자에게 확인)
+- **소요 시간**: 약 15-20분 (약 400MB+ 다운로드)
+
 ## 진행 순서
 
 스크립트가 자동으로 처리합니다:
