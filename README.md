@@ -9,7 +9,7 @@ curl -fsSL https://raw.githubusercontent.com/indentcorp/icarus-solar-tracking-in
 ## Windows (PowerShell)
 
 ```powershell
-irm https://raw.githubusercontent.com/indentcorp/icarus-solar-tracking-install-wizard/main/bootstrap.ps1 -OutFile $env:TEMP\ist-bootstrap.ps1; & $env:TEMP\ist-bootstrap.ps1
+irm https://raw.githubusercontent.com/indentcorp/icarus-solar-tracking-install-wizard/main/bootstrap.ps1 | iex
 ```
 
 ## 진행 순서
