@@ -92,12 +92,20 @@ if (-not $authOk) {
   }
 }
 gh auth setup-git
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "❌ git 인증 설정에 실패했습니다." -ForegroundColor Red
+  exit 1
+}
 
 # 5. Bun
 if (-not (Get-Command bun -ErrorAction SilentlyContinue)) {
   Write-Host "📦 Bun 설치 중..."
   irm https://bun.sh/install.ps1 | iex
   Refresh-Path
+  if (-not (Get-Command bun -ErrorAction SilentlyContinue)) {
+    Write-Host "❌ Bun 설치에 실패했습니다. https://bun.sh/install 에서 수동으로 설치하세요." -ForegroundColor Red
+    exit 1
+  }
 }
 
 $bunBin = Join-Path $env:USERPROFILE ".bun\bin"
@@ -110,6 +118,10 @@ $gitDir = Join-Path $REPO_DIR ".git"
 if (Test-Path $gitDir) {
   Write-Host "📁 이미 다운로드됨, 업데이트 중..."
   git -C $REPO_DIR pull --ff-only
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "❌ 업데이트에 실패했습니다. 로컬 변경사항이 있는지 확인하세요." -ForegroundColor Red
+    exit 1
+  }
 } else {
   Write-Host "📥 프로젝트 다운로드 중..."
   gh repo clone "${REPO_ORG}/${REPO_NAME}" $REPO_DIR
