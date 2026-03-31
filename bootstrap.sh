@@ -23,20 +23,27 @@ if ! command -v brew &>/dev/null; then
   [[ -f /usr/local/bin/brew ]] && eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-# 3. gh (GitHub CLI)
+# 3. Node.js (npm/npx 포함)
+if ! command -v node &>/dev/null; then
+  echo "📦 Node.js 설치 중..."
+  brew install node
+fi
+node --version
+
+# 4. gh (GitHub CLI)
 if ! command -v gh &>/dev/null; then
   echo "📦 GitHub CLI 설치 중..."
   brew install gh
 fi
 
-# 4. GitHub 인증
+# 5. GitHub 인증
 if ! gh auth status &>/dev/null; then
   echo "🔑 GitHub 인증이 필요합니다. 브라우저가 열립니다..."
   gh auth login --web -p https -h github.com
 fi
 gh auth setup-git
 
-# 5. Bun
+# 6. Bun
 if ! command -v bun &>/dev/null; then
   echo "📦 Bun 설치 중..."
   curl -fsSL https://bun.sh/install | bash
@@ -44,7 +51,7 @@ if ! command -v bun &>/dev/null; then
   export PATH="$BUN_INSTALL/bin:$PATH"
 fi
 
-# 6. Clone (idempotent)
+# 7. Clone (idempotent)
 if [ -d "$REPO_DIR/.git" ]; then
   echo "📁 이미 다운로드됨, 업데이트 중..."
   git -C "$REPO_DIR" pull --ff-only
@@ -53,7 +60,7 @@ else
   gh repo clone "${REPO_ORG}/${REPO_NAME}" "$REPO_DIR"
 fi
 
-# 7. Install + Init
+# 8. Install + Init
 cd "$REPO_DIR"
 bun install
 echo ""
