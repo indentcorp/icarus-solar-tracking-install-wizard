@@ -23,7 +23,7 @@ irm https://raw.githubusercontent.com/indentcorp/icarus-solar-tracking-install-w
 ## 진행 순서
 
 스크립트가 자동으로 처리합니다:
-1. 개발 도구 설치 (Git, Node.js, GitHub CLI, Bun)
+1. 개발 도구 설치 (Git, Node.js, GitHub CLI)
 2. GitHub 로그인 (브라우저 팝업)
 3. 프로젝트 다운로드
 4. IST 환경 설치 (`ist install`)

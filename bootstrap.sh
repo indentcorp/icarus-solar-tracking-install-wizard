@@ -42,15 +42,7 @@ if ! gh auth status &>/dev/null; then
 fi
 gh auth setup-git
 
-# 6. Bun
-if ! command -v bun &>/dev/null; then
-  echo "📦 Bun 설치 중..."
-  curl -fsSL https://bun.sh/install | bash
-  export BUN_INSTALL="$HOME/.bun"
-  export PATH="$BUN_INSTALL/bin:$PATH"
-fi
-
-# 7. Clone (idempotent)
+# 6. Clone (idempotent)
 if [ -d "$REPO_DIR/.git" ]; then
   echo "📁 이미 다운로드됨, 업데이트 중..."
   git -C "$REPO_DIR" pull --ff-only
@@ -59,8 +51,8 @@ else
   gh repo clone "${REPO_ORG}/${REPO_NAME}" "$REPO_DIR"
 fi
 
-# 8. Install + Init
+# 7. Install + Init
 cd "$REPO_DIR"
-bun install
+npm install
 echo ""
-bun run src/cli.ts install && bun run src/cli.ts init
+npx tsx src/cli.ts install && npx tsx src/cli.ts init

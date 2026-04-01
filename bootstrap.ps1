@@ -83,36 +83,7 @@
       throw "git 인증 설정에 실패했습니다. gh auth setup-git 실행 권한을 확인하세요."
     }
 
-    # 5. Bun
-    if (-not (Get-Command bun -ErrorAction SilentlyContinue)) {
-      Write-Host "📦 Bun 설치 중..." -ForegroundColor Cyan
-      $prevPref = $ErrorActionPreference
-      $ErrorActionPreference = "SilentlyContinue"
-      try {
-        irm https://bun.sh/install.ps1 | iex
-      } catch {
-        # Bun 설치 스크립트의 non-fatal error 무시
-      }
-      $ErrorActionPreference = $prevPref
-      Refresh-Path
-
-      $bunBin = Join-Path $env:USERPROFILE ".bun\bin"
-      if (Test-Path $bunBin -and -not ($env:Path -split ";" | Where-Object { $_ -eq $bunBin })) {
-        $env:Path = "$bunBin;$env:Path"
-      }
-
-      if (-not (Get-Command bun -ErrorAction SilentlyContinue)) {
-        throw "Bun 설치에 실패했습니다. 네트워크를 확인하고 다시 시도하세요."
-      }
-    }
-    Write-Host "✓ Bun 설치 완료" -ForegroundColor Green
-
-    $bunBin = Join-Path $env:USERPROFILE ".bun\bin"
-    if ($env:PATH -notlike "*$bunBin*") {
-      $env:PATH = "$bunBin;$env:PATH"
-    }
-
-    # 6. Clone (idempotent)
+    # 5. Clone (idempotent)
     $gitDir = Join-Path $REPO_DIR ".git"
     if (Test-Path $gitDir) {
       Write-Host "📁 이미 다운로드됨, 업데이트 중..."
@@ -128,20 +99,20 @@
       }
     }
 
-    # 7. Install + Init
+    # 6. Install + Init
     Set-Location $REPO_DIR
-    bun install
+    npm install
     if ($LASTEXITCODE -ne 0) {
       throw "의존성 설치에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
 
     Write-Host ""
-    bun run src/cli.ts install
+    npx tsx src/cli.ts install
     if ($LASTEXITCODE -ne 0) {
       throw "IST 설치 명령 실행에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
 
-    bun run src/cli.ts init
+    npx tsx src/cli.ts init
     if ($LASTEXITCODE -ne 0) {
       throw "IST 초기화 명령 실행에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
@@ -149,7 +120,7 @@
     Write-Host ""
     Write-Host "✅ 설치가 완료되었습니다!" -ForegroundColor Green
     Write-Host "   터미널을 재시작한 후 다음 명령어로 확인하세요:" -ForegroundColor Cyan
-    Write-Host "   bun run src/cli.ts run --help" -ForegroundColor White
+    Write-Host "   npx tsx src/cli.ts run --help" -ForegroundColor White
     Write-Host "   📁 프로젝트 위치: $REPO_DIR" -ForegroundColor White
     Write-Host "   새 터미널을 열고: cd '$REPO_DIR'" -ForegroundColor White
   } catch {
