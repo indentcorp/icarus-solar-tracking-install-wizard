@@ -23,8 +23,8 @@ irm https://raw.githubusercontent.com/indentcorp/spray-connect-tools-install-wiz
 ## 진행 순서
 
 스크립트가 자동으로 처리합니다:
-1. 개발 도구 설치 (Git, Node.js, bun, GitHub CLI)
+1. 개발 도구 설치 (Git, Node.js, GitHub CLI)
 2. GitHub 로그인 (브라우저 팝업)
 3. 프로젝트 다운로드
-4. 의존성 설치 (ship-tracker: npm, addr-check/addr-reply: bun)
+4. 의존성 설치 (ship-tracker, addr-check, addr-reply: npm)
 5. 환경 설치 및 프로필 설정

@@ -31,27 +31,20 @@ if ! command -v node &>/dev/null; then
 fi
 node --version
 
-# 4. bun
-if ! command -v bun &>/dev/null; then
-  echo "📦 bun 설치 중..."
-  brew install oven-sh/bun/bun 2>/dev/null || curl -fsSL https://bun.sh/install | bash
-fi
-bun --version
-
-# 5. gh (GitHub CLI)
+# 4. gh (GitHub CLI)
 if ! command -v gh &>/dev/null; then
   echo "📦 GitHub CLI 설치 중..."
   brew install gh
 fi
 
-# 6. GitHub 인증
+# 5. GitHub 인증
 if ! gh auth status &>/dev/null; then
   echo "🔑 GitHub 인증이 필요합니다. 브라우저가 열립니다..."
   gh auth login --web -p https -h github.com
 fi
 gh auth setup-git
 
-# 7. Clone (idempotent)
+# 6. Clone (idempotent)
 if [ -d "$REPO_DIR/.git" ]; then
   echo "📁 이미 다운로드됨, 업데이트 중..."
   git -C "$REPO_DIR" pull --ff-only
@@ -60,14 +53,14 @@ else
   gh repo clone "${REPO_ORG}/${REPO_NAME}" "$REPO_DIR"
 fi
 
-# 8. Install dependencies
+# 7. Install dependencies
 cd "$REPO_DIR/ship-tracker"
 npm install
 
-cd "$REPO_DIR/addr-check" && bun install
-cd "$REPO_DIR/addr-reply" && bun install
+cd "$REPO_DIR/addr-check" && npm install
+cd "$REPO_DIR/addr-reply" && npm install
 
-# 9. Setup
+# 8. Setup
 cd "$REPO_DIR/ship-tracker"
 echo ""
 npx tsx src/cli.ts install && npx tsx src/cli.ts init

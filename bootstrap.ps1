@@ -58,17 +58,7 @@
       Refresh-Path
     }
 
-    # 3. bun
-    if (-not (Get-Command bun -ErrorAction SilentlyContinue)) {
-      Write-Host "📦 bun 설치 중..."
-      winget install Oven-sh.Bun --accept-package-agreements --accept-source-agreements
-      if ($LASTEXITCODE -ne 0) {
-        throw "bun 설치에 실패했습니다. 관리자 권한 및 네트워크 상태를 확인하세요. (exit code: $LASTEXITCODE)"
-      }
-      Refresh-Path
-    }
-
-    # 4. gh
+    # 3. gh
     if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
       Write-Host "📦 GitHub CLI 설치 중..."
       winget install --id GitHub.cli -e --accept-package-agreements --accept-source-agreements
@@ -78,7 +68,7 @@
       Refresh-Path
     }
 
-    # 5. GitHub 인증
+    # 4. GitHub 인증
     gh auth status 2>$null
     $authOk = ($LASTEXITCODE -eq 0)
     if (-not $authOk) {
@@ -93,7 +83,7 @@
       throw "git 인증 설정에 실패했습니다. gh auth setup-git 실행 권한을 확인하세요."
     }
 
-    # 6. Clone (idempotent)
+    # 5. Clone (idempotent)
     $gitDir = Join-Path $REPO_DIR ".git"
     if (Test-Path $gitDir) {
       Write-Host "📁 이미 다운로드됨, 업데이트 중..."
@@ -109,7 +99,7 @@
       }
     }
 
-    # 7. Install dependencies
+    # 6. Install dependencies
     Set-Location (Join-Path $REPO_DIR "ship-tracker")
     npm install
     if ($LASTEXITCODE -ne 0) {
@@ -117,18 +107,18 @@
     }
 
     Set-Location (Join-Path $REPO_DIR "addr-check")
-    bun install
+    npm install
     if ($LASTEXITCODE -ne 0) {
       throw "addr-check 의존성 설치에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
 
     Set-Location (Join-Path $REPO_DIR "addr-reply")
-    bun install
+    npm install
     if ($LASTEXITCODE -ne 0) {
       throw "addr-reply 의존성 설치에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
 
-    # 8. Setup
+    # 7. Setup
     Set-Location (Join-Path $REPO_DIR "ship-tracker")
     Write-Host ""
     npx tsx src/cli.ts install
