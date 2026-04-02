@@ -2,7 +2,7 @@
   $ErrorActionPreference = "Stop"
 
   $REPO_ORG = "indentcorp"
-  $REPO_NAME = "icarus-solar-tracking"
+  $REPO_NAME = "spray-connect-tools"
   $REPO_DIR = Join-Path $HOME $REPO_NAME
 
   function Refresh-Path {
@@ -15,7 +15,7 @@
   }
 
   try {
-    Write-Host "🚀 Icarus Solar Tracking 설치를 시작합니다..." -ForegroundColor Cyan
+    Write-Host "🚀 Spray Connect Tools 설치를 시작합니다..." -ForegroundColor Cyan
 
     # 0. ExecutionPolicy — 자동 설정 시도
     $policy = Get-ExecutionPolicy -Scope CurrentUser
@@ -58,7 +58,17 @@
       Refresh-Path
     }
 
-    # 3. gh
+    # 3. bun
+    if (-not (Get-Command bun -ErrorAction SilentlyContinue)) {
+      Write-Host "📦 bun 설치 중..."
+      winget install Oven-sh.Bun --accept-package-agreements --accept-source-agreements
+      if ($LASTEXITCODE -ne 0) {
+        throw "bun 설치에 실패했습니다. 관리자 권한 및 네트워크 상태를 확인하세요. (exit code: $LASTEXITCODE)"
+      }
+      Refresh-Path
+    }
+
+    # 4. gh
     if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
       Write-Host "📦 GitHub CLI 설치 중..."
       winget install --id GitHub.cli -e --accept-package-agreements --accept-source-agreements
@@ -68,7 +78,7 @@
       Refresh-Path
     }
 
-    # 4. GitHub 인증
+    # 5. GitHub 인증
     gh auth status 2>$null
     $authOk = ($LASTEXITCODE -eq 0)
     if (-not $authOk) {
@@ -83,7 +93,7 @@
       throw "git 인증 설정에 실패했습니다. gh auth setup-git 실행 권한을 확인하세요."
     }
 
-    # 5. Clone (idempotent)
+    # 6. Clone (idempotent)
     $gitDir = Join-Path $REPO_DIR ".git"
     if (Test-Path $gitDir) {
       Write-Host "📁 이미 다운로드됨, 업데이트 중..."
@@ -99,28 +109,42 @@
       }
     }
 
-    # 6. Install + Init
-    Set-Location $REPO_DIR
+    # 7. Install dependencies
+    Set-Location (Join-Path $REPO_DIR "ship-tracker")
     npm install
     if ($LASTEXITCODE -ne 0) {
-      throw "의존성 설치에 실패했습니다. (exit code: $LASTEXITCODE)"
+      throw "ship-tracker 의존성 설치에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
 
+    Set-Location (Join-Path $REPO_DIR "addr-check")
+    bun install
+    if ($LASTEXITCODE -ne 0) {
+      throw "addr-check 의존성 설치에 실패했습니다. (exit code: $LASTEXITCODE)"
+    }
+
+    Set-Location (Join-Path $REPO_DIR "addr-reply")
+    bun install
+    if ($LASTEXITCODE -ne 0) {
+      throw "addr-reply 의존성 설치에 실패했습니다. (exit code: $LASTEXITCODE)"
+    }
+
+    # 8. Setup
+    Set-Location (Join-Path $REPO_DIR "ship-tracker")
     Write-Host ""
     npx tsx src/cli.ts install
     if ($LASTEXITCODE -ne 0) {
-      throw "IST 설치 명령 실행에 실패했습니다. (exit code: $LASTEXITCODE)"
+      throw "설치 명령 실행에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
 
     npx tsx src/cli.ts init
     if ($LASTEXITCODE -ne 0) {
-      throw "IST 초기화 명령 실행에 실패했습니다. (exit code: $LASTEXITCODE)"
+      throw "초기화 명령 실행에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
 
     Write-Host ""
     Write-Host "✅ 설치가 완료되었습니다!" -ForegroundColor Green
     Write-Host "   터미널을 재시작한 후 다음 명령어로 확인하세요:" -ForegroundColor Cyan
-    Write-Host "   npx tsx src/cli.ts run --help" -ForegroundColor White
+    Write-Host "   cd '$REPO_DIR\ship-tracker' && npx tsx src/cli.ts run --help" -ForegroundColor White
     Write-Host "   📁 프로젝트 위치: $REPO_DIR" -ForegroundColor White
     Write-Host "   새 터미널을 열고: cd '$REPO_DIR'" -ForegroundColor White
   } catch {
