@@ -100,6 +100,12 @@
     }
 
     # 6. Install dependencies
+    Set-Location $REPO_DIR
+    npm install
+    if ($LASTEXITCODE -ne 0) {
+      throw "루트 의존성 설치에 실패했습니다. (exit code: $LASTEXITCODE)"
+    }
+
     Set-Location (Join-Path $REPO_DIR "ship-tracker")
     npm install
     if ($LASTEXITCODE -ne 0) {
@@ -119,24 +125,18 @@
     }
 
     # 7. Setup
-    Set-Location (Join-Path $REPO_DIR "ship-tracker")
+    Set-Location $REPO_DIR
     Write-Host ""
-    npx tsx src/cli.ts install
+    npx tsx sct/src/cli.ts install
     if ($LASTEXITCODE -ne 0) {
       throw "설치 명령 실행에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
 
-    npx tsx src/cli.ts init
-    if ($LASTEXITCODE -ne 0) {
-      throw "초기화 명령 실행에 실패했습니다. (exit code: $LASTEXITCODE)"
-    }
-
     Write-Host ""
     Write-Host "✅ 설치가 완료되었습니다!" -ForegroundColor Green
-    Write-Host "   터미널을 재시작한 후 다음 명령어로 확인하세요:" -ForegroundColor Cyan
-    Write-Host "   cd '$REPO_DIR\ship-tracker' && npx tsx src/cli.ts run --help" -ForegroundColor White
     Write-Host "   📁 프로젝트 위치: $REPO_DIR" -ForegroundColor White
     Write-Host "   새 터미널을 열고: cd '$REPO_DIR'" -ForegroundColor White
+    Write-Host "   다음 단계: 에이전트에게 '프로필 만들어줘'를 요청해 sct-init 스킬로 프로필 생성을 진행하세요." -ForegroundColor Cyan
   } catch {
     Write-Host ""
     Write-Host "❌ 오류가 발생했습니다: $_" -ForegroundColor Red

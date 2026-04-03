@@ -39,14 +39,13 @@ irm https://raw.githubusercontent.com/indentcorp/spray-connect-tools-install-wiz
 1. 개발 도구 설치 (Git, Node.js, GitHub CLI)
 2. GitHub 로그인 (브라우저 팝업)
 3. 프로젝트 다운로드
-4. 의존성 설치 (ship-tracker, addr-check, addr-reply: npm)
-5. 환경 설치 (`gws`, `tsx`, Playwright, opencode)
-6. Google 로그인 및 프로필 설정
+4. 저장소 루트 및 내부 패키지 의존성 설치
+5. 저장소 루트 기준 `sct install` 실행
+6. 설치 완료 후 에이전트 대화로 `sct-init` 프로필 설정 진행
 
 ### 설치 중 멈춘 것처럼 보일 수 있는 단계
 
 - **GitHub 로그인**: 브라우저 인증 완료 전까지 대기
-- **Google 로그인**: 브라우저 인증/동의 완료 전까지 대기
 - **Playwright 설치**: 다운로드 용량이 커서 수 분 걸릴 수 있음
 
 위 단계는 오류가 아니라 **사용자 입력 또는 다운로드 대기 상태**일 수 있습니다.

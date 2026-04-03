@@ -54,6 +54,9 @@ else
 fi
 
 # 7. Install dependencies
+cd "$REPO_DIR"
+npm install
+
 cd "$REPO_DIR/ship-tracker"
 npm install
 
@@ -61,6 +64,10 @@ cd "$REPO_DIR/addr-check" && npm install
 cd "$REPO_DIR/addr-reply" && npm install
 
 # 8. Setup
-cd "$REPO_DIR/ship-tracker"
+cd "$REPO_DIR"
 echo ""
-npx tsx src/cli.ts install && npx tsx src/cli.ts init
+npx tsx sct/src/cli.ts install
+echo ""
+echo "✅ 설치가 완료되었습니다!"
+echo "📁 프로젝트 위치: $REPO_DIR"
+echo "다음 단계: 에이전트에게 '프로필 만들어줘'를 요청해 sct-init 스킬로 프로필 생성을 진행하세요."
