@@ -136,7 +136,7 @@
     Write-Host "✅ 설치가 완료되었습니다!" -ForegroundColor Green
     Write-Host "   📁 프로젝트 위치: $REPO_DIR" -ForegroundColor White
     Write-Host "   새 터미널을 열고: cd '$REPO_DIR'" -ForegroundColor White
-    Write-Host "   다음 단계: 에이전트에게 '프로필 만들어줘'를 요청해 sct-init 스킬로 프로필 생성을 진행하세요." -ForegroundColor Cyan
+    Write-Host "   다음 단계: 에이전트에게 '브랜드 프로필 만들어줘'를 요청해 sct-init 스킬로 브랜드 프로필 생성을 진행하세요." -ForegroundColor Cyan
   } catch {
     Write-Host ""
     Write-Host "❌ 오류가 발생했습니다: $_" -ForegroundColor Red
