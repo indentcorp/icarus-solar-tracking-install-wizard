@@ -1,12 +1,12 @@
 #!/bin/bash
-# spray-connect-tools bootstrap installer
+# moon bootstrap installer
 set -euo pipefail
 
 REPO_ORG="indentcorp"
-REPO_NAME="spray-connect-tools"
+REPO_NAME="moon"
 REPO_DIR="$HOME/${REPO_NAME}"
 
-echo "🚀 Spray Connect Tools 설치를 시작합니다..."
+echo "🚀 Moon 설치를 시작합니다..."
 
 # 1. Xcode CLT (git 포함) — poll until done
 if ! xcode-select -p &>/dev/null; then
@@ -61,13 +61,11 @@ cd "$REPO_DIR/ship-tracker"
 npm install
 
 cd "$REPO_DIR/addr-check" && npm install
-cd "$REPO_DIR/addr-reply" && npm install
 
 # 8. Setup
 cd "$REPO_DIR"
 echo ""
-npx tsx sct/src/cli.ts install
+npx tsx moon/src/cli.ts install
 echo ""
 echo "✅ 설치가 완료되었습니다!"
 echo "📁 프로젝트 위치: $REPO_DIR"
-echo "다음 단계: 에이전트에게 '브랜드 프로필 만들어줘'를 요청해 sct-init 스킬로 브랜드 프로필 생성을 진행하세요."

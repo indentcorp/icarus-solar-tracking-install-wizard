@@ -2,7 +2,7 @@
   $ErrorActionPreference = "Stop"
 
   $REPO_ORG = "indentcorp"
-  $REPO_NAME = "spray-connect-tools"
+  $REPO_NAME = "moon"
   $REPO_DIR = Join-Path $HOME $REPO_NAME
 
   function Refresh-Path {
@@ -15,7 +15,7 @@
   }
 
   try {
-    Write-Host "🚀 Spray Connect Tools 설치를 시작합니다..." -ForegroundColor Cyan
+    Write-Host "🚀 Moon 설치를 시작합니다..." -ForegroundColor Cyan
 
     # 0. ExecutionPolicy — 자동 설정 시도
     $policy = Get-ExecutionPolicy -Scope CurrentUser
@@ -118,16 +118,10 @@
       throw "addr-check 의존성 설치에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
 
-    Set-Location (Join-Path $REPO_DIR "addr-reply")
-    npm install
-    if ($LASTEXITCODE -ne 0) {
-      throw "addr-reply 의존성 설치에 실패했습니다. (exit code: $LASTEXITCODE)"
-    }
-
     # 7. Setup
     Set-Location $REPO_DIR
     Write-Host ""
-    npx tsx sct/src/cli.ts install
+    npx tsx moon/src/cli.ts install
     if ($LASTEXITCODE -ne 0) {
       throw "설치 명령 실행에 실패했습니다. (exit code: $LASTEXITCODE)"
     }
@@ -136,7 +130,6 @@
     Write-Host "✅ 설치가 완료되었습니다!" -ForegroundColor Green
     Write-Host "   📁 프로젝트 위치: $REPO_DIR" -ForegroundColor White
     Write-Host "   새 터미널을 열고: cd '$REPO_DIR'" -ForegroundColor White
-    Write-Host "   다음 단계: 에이전트에게 '브랜드 프로필 만들어줘'를 요청해 sct-init 스킬로 브랜드 프로필 생성을 진행하세요." -ForegroundColor Cyan
   } catch {
     Write-Host ""
     Write-Host "❌ 오류가 발생했습니다: $_" -ForegroundColor Red
